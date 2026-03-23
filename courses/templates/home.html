@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+<h1>Mes listes de courses</h1>
+
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <h5 class="card-title text-center">Rejoindre une liste partagée</h5>
+        <form method="post" action="{% url 'rejoindre_par_code' %}" class="input-group input-group-lg">
+            {% csrf_token %}
+            <input type="text"
+                   name="share_code"
+                   class="form-control text-uppercase text-center"
+                   placeholder="CODE À 6 LETTRES/CHIFFRES"
+                   maxlength="6"
+                   pattern="[A-Z0-9]{6}"
+                   required
+                   autofocus>
+            <button class="btn btn-primary" type="submit">
+                Rejoindre ♥
+            </button>
+        </form>
+        <small class="form-text text-muted text-center d-block mt-2">
+            Demande le code à l’autre personne
+        </small>
+    </div>
+</div>
+
+<a href="{% url 'creer_liste' %}" class="btn btn-primary">Nouvelle liste</a>
+<ul>
+{% for liste in listes %}
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">
+                {{ liste.nom }}
+                {% if liste.utilisateur == user %}
+                    <span class="badge bg-primary ms-2">À toi</span>
+                {% else %}
+                    <span class="badge bg-success ms-2">Partagée</span>
+                {% endif %}
+            </h5>
+            <p class="card-text">
+                Créée par {{ liste.utilisateur.username }}
+                {% if liste.membres.exists %}
+                    • Partagée avec {{ liste.membres.count }} personne{{ liste.membres.count|pluralize }}
+                {% endif %}
+            </p>
+            <a href="{% url 'detail_liste' liste.pk %}" class="btn btn-primary">Voir</a>
+        </div>
+    </div>
+{% empty %}
+    <p class="text-muted">Aucune liste pour le moment. Créez-en une ou rejoignez-en une avec un code !</p>
+{% endfor %}
+</ul>
+{% endblock %}

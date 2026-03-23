@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>{{ liste.nom }}</h1>
+
+<form method="post">{% csrf_token %}{{ form.as_p }}<button type="submit" class="btn btn-success">Ajouter</button></form>
+
+<ul class="list-group">
+{% for article in liste.articles.all %}
+    <li class="list-group-item {% if article.achete %}text-decoration-line-through{% endif %}">
+        {{ article.nom }} × {{ article.quantite }}
+        <a href="{% url 'toggle_achete' article.pk %}" class="btn btn-sm btn-outline-primary">✓</a>
+        <a href="{% url 'supprimer_article' article.pk %}" class="btn btn-sm btn-outline-danger">🗑</a>
+    </li>
+{% endfor %}
+</ul>
+
+{% if user != liste.utilisateur %}
+    <div class="alert alert-info mt-2">
+        Liste partagée par {{ liste.utilisateur.username }} ❤️
+    </div>
+{% endif %}
+
+{% if liste.utilisateur == user %}
+<div class="alert alert-success mt-3 text-center">
+    <h5>Partage avec ton amoureuse ♥</h5>
+    <div class="d-flex justify-content-center align-items-center gap-3">
+        <code class="fs-3 fw-bold bg-white p-2 rounded">{{ liste.share_code }}</code>
+        <button class="btn btn-outline-primary btn-sm"
+                onclick="navigator.clipboard.writeText('{{ liste.share_code }}'); alert('Code copié ! ❤️')">
+            Copier
+        </button>
+    </div>
+    <small class="d-block mt-2 text-muted">
+        Donne-lui ce code pour qu’elle puisse rejoindre ta liste
+    </small>
+</div>
+{% endif %}
+
+<a href="{% url 'supprimer_liste' liste.pk %}" class="btn btn-danger mt-3">Supprimer la liste</a>
+
+<div class="mt-4">
+    <a href="{% url 'home' %}" class="btn btn-outline-secondary">
+        ← Retour à l'accueil
+    </a>
+</div>
+{% endblock %}
