@@ -7,3 +7,5 @@ __pycache__/
 staticfiles/
 media/
 .env
+helper.txt
+COMMANDES_RAILWAY.md
