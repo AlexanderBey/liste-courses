@@ -36,6 +36,17 @@ DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 
+# sécurité https (railway force https)
+SECURE_SSL_REDIRECT = True # Redirige HTTP → HTTPS
+SESSION_COOKIE_SECURE = True # Cookies seulement sur HTTPS
+CSRF_COOKIE_SECURE = True # CSRF token seulement sur HTTPS
+
+# Très important pour Railway (sinon CSRF est bloqué sur les domaines dynamiques)
+CSRF_TRUSTED_ORIGINS = [
+    'https://web-production-240e5.up.railway.app',  # ton domaine exact
+    'https://*.railway.app',                         # tous les sous-domaines Railway
+]
+
 
 # Application definition
 
